@@ -1,0 +1,134 @@
+# ◆	Кейс-задача № 3
+# ◆	Спроектируйте базу данных «Туризм» (перечень предоставляемых услуг, заказ туров и др.). При проектировании базы данных необходимо создать 4-5 таблиц предметной области: 3-4 таблицы-справочника и 1 таблицу переменной информации. Для всех таблиц создать первичные ключи. Построить связи между таблицами при помощи внешних ключей: атрибуты таблицы переменной информации должны ссылаться на ключевые атрибуты таблиц справочников. 
+# ◆	Когда вы создаете базу данных в MySQL с помощью MySQL Workbench (или любого другого инструмента), вы можете экспортировать схему базы данных в виде скрипта SQL. Этот скрипт SQL содержит определения таблиц, связей, индексов и других структур базы данных, которые вы создали. Или иным удобным для Вас способом.
+
+
+Проектирование базы данных для туризма включает создание таблиц, которые будут хранить информацию об услугах, турах, клиентах и связанных сущностях. Вот пример схемы базы данных с пятью таблицами: тремя справочными и двумя таблицами переменной информации.
+
+Таблицы справочников:
+Countries (Страны)
+TourTypes (Типы туров)
+Services (Услуги)
+Таблицы переменной информации:
+Tours (Туры)
+Orders (Заказы)
+Структура таблиц:
+1. Countries (Страны)
+
+CREATE TABLE Countries (
+    country_id INT PRIMARY KEY AUTO_INCREMENT,
+    country_name VARCHAR(100) NOT NULL
+);
+2. TourTypes (Типы туров)
+
+CREATE TABLE TourTypes (
+    tour_type_id INT PRIMARY KEY AUTO_INCREMENT,
+    tour_type_name VARCHAR(50) NOT NULL
+);
+3. Services (Услуги)
+
+CREATE TABLE Services (
+    service_id INT PRIMARY KEY AUTO_INCREMENT,
+    service_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL
+);
+4. Tours (Туры)
+
+CREATE TABLE Tours (
+    tour_id INT PRIMARY KEY AUTO_INCREMENT,
+    tour_name VARCHAR(200) NOT NULL,
+    description TEXT,
+    duration_days SMALLINT,
+    cost DECIMAL(10, 2),
+    country_id INT,
+    tour_type_id INT,
+    FOREIGN KEY (country_id) REFERENCES Countries(country_id),
+    FOREIGN KEY (tour_type_id) REFERENCES TourTypes(tour_type_id)
+);
+5. Orders (Заказы)
+
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    client_name VARCHAR(150) NOT NULL,
+    contact_info VARCHAR(255),
+    tour_id INT,
+    service_id INT,
+    order_date DATE,
+    FOREIGN KEY (tour_id) REFERENCES Tours(tour_id),
+    FOREIGN KEY (service_id) REFERENCES Services(service_id)
+);
+Связи между таблицами:
+Таблица Tours ссылается на таблицу Countries через внешний ключ country_id.
+Таблица Tours ссылается на таблицу TourTypes через внешний ключ tour_type_id.
+Таблица Orders ссылается на таблицу Tours через внешний ключ tour_id.
+Таблица Orders ссылается на таблицу Services через внешний ключ service_id.
+Пример скрипта для создания базы данных в MySQL:
+
+-- Создание базы данных
+CREATE DATABASE tourism_db;
+
+-- Использование базы данных
+USE tourism_db;
+
+-- Создание таблиц
+CREATE TABLE Countries (
+    country_id INT PRIMARY KEY AUTO_INCREMENT,
+    country_name VARCHAR(100) NOT NULL
+);
+
+CREATE TABLE TourTypes (
+    tour_type_id INT PRIMARY KEY AUTO_INCREMENT,
+    tour_type_name VARCHAR(50) NOT NULL
+);
+
+CREATE TABLE Services (
+    service_id INT PRIMARY KEY AUTO_INCREMENT,
+    service_name VARCHAR(100) NOT NULL,
+    price DECIMAL(10, 2) NOT NULL
+);
+
+CREATE TABLE Tours (
+    tour_id INT PRIMARY KEY AUTO_INCREMENT,
+    tour_name VARCHAR(200) NOT NULL,
+    description TEXT,
+    duration_days SMALLINT,
+    cost DECIMAL(10, 2),
+    country_id INT,
+    tour_type_id INT,
+    FOREIGN KEY (country_id) REFERENCES Countries(country_id),
+    FOREIGN KEY (tour_type_id) REFERENCES TourTypes(tour_type_id)
+);
+
+CREATE TABLE Orders (
+    order_id INT PRIMARY KEY AUTO_INCREMENT,
+    client_name VARCHAR(150) NOT NULL,
+    contact_info VARCHAR(255),
+    tour_id INT,
+    service_id INT,
+    order_date DATE,
+    FOREIGN KEY (tour_id) REFERENCES Tours(tour_id),
+    FOREIGN KEY (service_id) REFERENCES Services(service_id)
+);
+Заполнение тестовыми данными (необязательно):
+
+-- Добавление стран
+INSERT INTO Countries (country_name) VALUES ('Россия'), ('Италия'), ('Франция');
+
+-- Добавление типов туров
+INSERT INTO TourTypes (tour_type_name) VALUES ('Экскурсионный'), ('Пляжный'), ('Горнолыжный');
+
+-- Добавление услуг
+INSERT INTO Services (service_name, price) VALUES ('Трансфер', 500.00), ('Гид', 300.00), ('Страховка', 250.00);
+
+-- Добавление туров
+INSERT INTO Tours (tour_name, description, duration_days, cost, country_id, tour_type_id) 
+VALUES ('Золотое кольцо России', 'Путешествие по историческим местам России', 7, 35000.00, 1, 1),
+       ('Романтическая Италия', 'Путешествие по Италии с посещением Рима, Венеции и Флоренции', 10, 60000.00, 2, 1),
+       ('Французские Альпы', 'Катание на лыжах во французских Альпах', 5, 45000.00, 3, 3);
+
+-- Добавление заказов
+INSERT INTO Orders (client_name, contact_info, tour_id, service_id, order_date) 
+VALUES ('Иван Иванов', '+79991234567', 1, 1, '2023-01-05'),
+       ('Марина Петрова', '+79876543210', 2, 2, '2023-02-10'),
+       ('Сергей Сидоров', '+79123456789', 3, 3, '2023-03-15');
+Этот скрипт создает структуру базы данных и заполняет её тестовыми данными. Вы можете адаптировать его под свои нужды, добавив или изменяя таблицы и связи в зависимости от требований вашего проекта.
