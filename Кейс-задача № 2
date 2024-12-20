@@ -1,0 +1,92 @@
+
+# Кейс-задача № 2
+# Написать тестовую программу, которая демонстрирует работу методов базового и производного классов.
+# Ответом на задачу будет ссылка на репозиторий GitHub, где хранится Ваша программа. Или иным удобным для Вас способом.
+
+
+
+class Animal:  # Базовый класс
+    def __init__(self, name, species):
+        self.name = name
+        self.species = species
+
+    def speak(self):
+        print("Generic animal sound")
+
+    def move(self):
+        print(f"{self.name} the {self.species} is moving.")
+
+    def __str__(self): # для удобного вывода информации об объекте
+        return f"Animal: {self.name} ({self.species})"
+
+
+
+class Dog(Animal):  # Производный класс
+    def __init__(self, name, breed):
+        super().__init__(name, "Dog") # Вызов конструктора родительского класса
+        self.breed = breed
+
+    def speak(self):
+        print("Woof!")
+
+    def fetch(self):
+        print(f"{self.name} the {self.breed} is fetching.")
+
+    def __str__(self):
+        return f"Dog: {self.name} ({self.breed})"
+
+
+
+class Cat(Animal):  # Другой производный класс
+    def __init__(self, name, color):
+        super().__init__(name, "Cat")
+        self.color = color
+
+    def speak(self):
+        print("Meow!")
+
+    def purr(self):
+        print(f"{self.name} the {self.color} cat is purring.")
+
+    def __str__(self):
+        return f"Cat: {self.name} ({self.color} cat)"
+
+
+# Создание объектов
+animal = Animal("Generic", "Animal")
+dog = Dog("Buddy", "Golden Retriever")
+cat = Cat("Whiskers", "Gray")
+
+
+# Вызов методов
+print(animal)
+animal.speak()  # Выведет "Generic animal sound"
+animal.move()    # Выведет "Generic the Animal is moving."
+
+print(dog)
+dog.speak()  # Выведет "Woof!"
+dog.move()    # Выведет "Buddy the Dog is moving."
+dog.fetch()  # Выведет "Buddy the Golden Retriever is fetching."
+
+print(cat)
+cat.speak()  # Выведет "Meow!"
+cat.move()    # Выведет "Whiskers the Cat is moving."
+cat.purr()   # Выведет "Whiskers the Gray cat is purring."
+
+
+# Полиморфизм - вызов метода speak() для разных типов объектов
+print("\nПолиморфизм:")
+for pet in [animal, dog, cat]:
+    print(pet)
+    pet.speak()
+    pet.move()
+
+
+
+# Этот код демонстрирует:
+
+# • Наследование:  Dog и Cat наследуют от Animal.
+# • Переопределение методов: speak() переопределен в дочерних классах.
+# • Полиморфизм:  speak() и move() ведут себя по-разному для разных типов животных.
+# • Использование super():  В конструкторах дочерних классов используется super() для вызова конструктора родительского класса.
+# • __str__ метод:  Добавлен для более удобного вывода информации об объектах.
