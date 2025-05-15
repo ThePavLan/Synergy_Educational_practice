@@ -10,40 +10,25 @@
 
 
 
-def sum_between_min_max(arr):
-    # Найдем минимальные и максимальные элементы и их индексы
-    min_value = float('inf')
-    max_value = float('-inf')
-    min_index = -1
-    max_index = -1
+def sum_negative_between_min_max(arr):
+    if not arr:
+        return 0
     
-    for i in range(len(arr)):
-        if arr[i] < min_value:
-            min_value = arr[i]
-            min_index = i
-        if arr[i] > max_value:
-            max_value = arr[i]
-            max_index = i
-            
-    # Определим границы диапазона для суммирования
-    start = min(min_index, max_index) + 1
-    end = max(min_index, max_index)
+    # Поиск индексов минимума и максимума
+    min_idx = arr.index(min(arr))
+    max_idx = arr.index(max(arr))
     
-    # Суммируем отрицательные элементы между границами
-    total_sum = 0
-    for i in range(start, end):
-        if arr[i] < 0:
-            total_sum += arr[i]
+    # Определение диапазона
+    start = min(min_idx, max_idx) + 1
+    end = max(min_idx, max_idx)
     
-    return total_sum
+    # Суммирование отрицательных элементов
+    return sum(x for x in arr[start:end] if x < 0)
 
-# Пример использования функции
-arr = [-5, 7, -8, 12, -13, 20, -25, 30]
-result = sum_between_min_max(arr)
-print(result)  # Ожидаемый результат: -46
-
-# Пояснения к программе:
-# Поиск минимума и максимума: Используем переменные min_value, max_value, min_index и max_index для отслеживания текущего минимума, максимума и их индексов. Начальное значение для минимума — бесконечность (float('inf')), а для максимума — минус бесконечность (float('-inf')).
-# Определение границ диапазона: Определяем начальный и конечный индексы для суммирования, используя минимальное и максимальное значения индексов.
-# Суммирование отрицательных элементов: Проходим по всем элементам между найденными границами и суммируем те, которые меньше нуля.
-# Программа выводит итоговую сумму отрицательных элементов, находящихся между минимальным и максимальным элементами массива.
+# Пример использования
+A = [3, -1, -5, 2, -4, 8]
+result = sum_negative_between_min_max(A)
+print("Сумма отрицательных элементов:", result)  # Результат: -4
+B = [-5, 7, -8, 12, -13, 20, -25, 30]
+result = sum_negative_between_min_max(B)
+print("Сумма отрицательных элементов:", result)  # Результат: 0
