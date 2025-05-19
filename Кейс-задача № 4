@@ -6,3 +6,104 @@
 
 
 #Базу данных для выполения данного задания будем использовать из кейса №3, созданную в PostgreSQL.
+
+-- Удаление таблиц, если они уже существуют
+DROP TABLE IF EXISTS Bookings, Clients, Tours, TourTypes, Cities, Countries CASCADE;
+
+-- 1. Таблица стран (справочник)
+CREATE TABLE Countries (
+    CountryID INT PRIMARY KEY,
+    CountryName VARCHAR(100) NOT NULL
+);
+
+-- 2. Таблица городов (справочник)
+CREATE TABLE Cities (
+    CityID INT PRIMARY KEY,
+    CityName VARCHAR(100) NOT NULL,
+    CountryID INT,
+    FOREIGN KEY (CountryID) REFERENCES Countries(CountryID)
+);
+
+-- 3. Таблица типов туров (справочник)
+CREATE TABLE TourTypes (
+    TypeID INT PRIMARY KEY,
+    TypeName VARCHAR(100) NOT NULL
+);
+
+-- 4. Таблица туров (переменная информация)
+CREATE TABLE Tours (
+    TourID INT PRIMARY KEY,
+    TourName VARCHAR(255) NOT NULL,
+    CityID INT,
+    TypeID INT,
+    Price DECIMAL(10, 2),
+    DurationDays INT,
+    FOREIGN KEY (CityID) REFERENCES Cities(CityID),
+    FOREIGN KEY (TypeID) REFERENCES TourTypes(TypeID)
+);
+
+-- 5. Таблица клиентов (переменная информация)
+CREATE TABLE Clients (
+    ClientID INT PRIMARY KEY,
+    FirstName VARCHAR(100) NOT NULL,
+    LastName VARCHAR(100) NOT NULL,
+    Email VARCHAR(100) UNIQUE
+);
+
+-- 6. Таблица бронирований (переменная информация)
+CREATE TABLE Bookings (
+    BookingID INT PRIMARY KEY,
+    ClientID INT,
+    TourID INT,
+    BookingDate DATE,
+    Status VARCHAR(20),
+    FOREIGN KEY (ClientID) REFERENCES Clients(ClientID),
+    FOREIGN KEY (TourID) REFERENCES Tours(TourID)
+);
+
+-- Заполнение справочных таблиц данными
+INSERT INTO Countries (CountryID, CountryName) VALUES
+(1, 'Россия'),
+(2, 'Германия'),
+(3, 'Франция'),
+(4, 'Италия'),
+(5, 'Испания');
+
+INSERT INTO Cities (CityID, CityName, CountryID) VALUES
+(1, 'Москва', 1),
+(2, 'Берлин', 2),
+(3, 'Париж', 3),
+(4, 'Рим', 4),
+(5, 'Мадрид', 5);
+
+INSERT INTO TourTypes (TypeID, TypeName) VALUES
+(1, 'Экскурсионный'),
+(2, 'Загородный'),
+(3, 'Тематический'),
+(4, 'Деловой'),
+(5, 'Пляжный');
+
+-- Заполнение таблицы туров
+INSERT INTO Tours (TourID, TourName, CityID, TypeID, Price, DurationDays) VALUES
+(1, 'Обзорная экскурсия по Москве', 1, 1, 15000, 3),
+(2, 'Деловой тур в Берлин', 2, 4, 16000, 4),
+(3, 'Тематический тур в Париж', 3, 3, 17000, 5),
+(4, 'Загородный тур около Рима', 4, 2, 18000, 6),
+(5, 'Пляжный отдых в Сочи', 5, 5, 19000, 7);
+
+-- Заполнение таблицы клиентов
+INSERT INTO Clients (ClientID, FirstName, LastName, Email) VALUES
+(1, 'Иван', 'Иванов', 'ivan@example.com'),
+(2, 'Иван', 'Петров', 'ivan2@example.com'),
+(3, 'Иван', 'Сидоров', 'ivan3@example.com'),
+(4, 'Мария', 'Александрова', 'maria@example.com'),
+(5, 'Мария', 'Смирнова', 'maria2@example.com');
+
+-- Заполнение таблицы бронирований
+INSERT INTO Bookings (BookingID, ClientID, TourID, BookingDate, Status) VALUES
+(1, 1, 1, '2024-05-20', 'Confirmed'),
+(2, 2, 2, '2024-05-21', 'Pending'),
+(3, 3, 3, '2024-05-22', 'Pending'),
+(4, 4, 4, '2024-05-23', 'Confirmed'),
+(5, 5, 5, '2024-05-24', 'Pending');
+
