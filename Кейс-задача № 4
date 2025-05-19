@@ -4,7 +4,45 @@
 #Создайте с помощью Delphi 10.2 и MS Internet Information Server (IIS) приложение WEB-архитектуры на любую тему. 
 #Базу данных для WEB-приложения создать в MS SQL Server.
 
+#1
+#Проведите анализ и опишите имеющихся на рынке программного обеспечения информационных систем, построенных по архитектуре WEB-приложений.
+#Описать существующие веб-архитектуры и выбрать подходящую для реализации проекта.
 
+#Примеры веб-архитектур:
+
+#1) Монолитная архитектура
+#Все компоненты (фронтенд, бэкенд, БД) объединены в один модуль.
+#Плюсы: Простота разработки.
+#Минусы: Сложность масштабирования.
+#Пример: WordPress.
+
+#2) MVC (Model-View-Controller)
+#Разделение на три части:
+#Model — работа с данными.
+#View — отображение интерфейса.
+#Controller — обработка запросов.
+#Плюсы: Четкое разделение ролей.
+#Минусы: Сложность для малых проектов.
+#Пример: Django, ASP.NET.
+
+#3) REST API + SPA (Single Page Application)
+#Сервер предоставляет данные через API, фронтенд работает отдельно.
+#Плюсы: Гибкость, кросс-платформенность.
+#Минусы: Необходимость отдельной разработки фронтенда и бэкенда.
+#Пример: React + Flask.
+
+#4) Микросервисная архитектура
+#Приложение делится на независимые сервисы.
+#Плюсы: Масштабируемость.
+#Минусы: Сложность управления.
+#Пример: Netflix.
+
+#5)Выбор архитектуры для практики: REST API + SPA
+#Почему?
+#Простота реализации для новичков, возможность использовать PostgreSQL (вместо MS SQL Server), гибкость для будущего расширения.
+
+#2 
+#создание БД
 #Базу данных для выполения данного задания будем использовать из кейса №3, созданную в PostgreSQL.
 
 -- Удаление таблиц, если они уже существуют
@@ -15,7 +53,6 @@ CREATE TABLE Countries (
     CountryID INT PRIMARY KEY,
     CountryName VARCHAR(100) NOT NULL
 );
-
 -- 2. Таблица городов (справочник)
 CREATE TABLE Cities (
     CityID INT PRIMARY KEY,
@@ -23,13 +60,11 @@ CREATE TABLE Cities (
     CountryID INT,
     FOREIGN KEY (CountryID) REFERENCES Countries(CountryID)
 );
-
 -- 3. Таблица типов туров (справочник)
 CREATE TABLE TourTypes (
     TypeID INT PRIMARY KEY,
     TypeName VARCHAR(100) NOT NULL
 );
-
 -- 4. Таблица туров (переменная информация)
 CREATE TABLE Tours (
     TourID INT PRIMARY KEY,
@@ -41,7 +76,6 @@ CREATE TABLE Tours (
     FOREIGN KEY (CityID) REFERENCES Cities(CityID),
     FOREIGN KEY (TypeID) REFERENCES TourTypes(TypeID)
 );
-
 -- 5. Таблица клиентов (переменная информация)
 CREATE TABLE Clients (
     ClientID INT PRIMARY KEY,
@@ -49,7 +83,6 @@ CREATE TABLE Clients (
     LastName VARCHAR(100) NOT NULL,
     Email VARCHAR(100) UNIQUE
 );
-
 -- 6. Таблица бронирований (переменная информация)
 CREATE TABLE Bookings (
     BookingID INT PRIMARY KEY,
@@ -60,7 +93,6 @@ CREATE TABLE Bookings (
     FOREIGN KEY (ClientID) REFERENCES Clients(ClientID),
     FOREIGN KEY (TourID) REFERENCES Tours(TourID)
 );
-
 -- Заполнение справочных таблиц данными
 INSERT INTO Countries (CountryID, CountryName) VALUES
 (1, 'Россия'),
@@ -68,21 +100,18 @@ INSERT INTO Countries (CountryID, CountryName) VALUES
 (3, 'Франция'),
 (4, 'Италия'),
 (5, 'Испания');
-
 INSERT INTO Cities (CityID, CityName, CountryID) VALUES
 (1, 'Москва', 1),
 (2, 'Берлин', 2),
 (3, 'Париж', 3),
 (4, 'Рим', 4),
 (5, 'Мадрид', 5);
-
 INSERT INTO TourTypes (TypeID, TypeName) VALUES
 (1, 'Экскурсионный'),
 (2, 'Загородный'),
 (3, 'Тематический'),
 (4, 'Деловой'),
 (5, 'Пляжный');
-
 -- Заполнение таблицы туров
 INSERT INTO Tours (TourID, TourName, CityID, TypeID, Price, DurationDays) VALUES
 (1, 'Обзорная экскурсия по Москве', 1, 1, 15000, 3),
@@ -90,7 +119,6 @@ INSERT INTO Tours (TourID, TourName, CityID, TypeID, Price, DurationDays) VALUES
 (3, 'Тематический тур в Париж', 3, 3, 17000, 5),
 (4, 'Загородный тур около Рима', 4, 2, 18000, 6),
 (5, 'Пляжный отдых в Сочи', 5, 5, 19000, 7);
-
 -- Заполнение таблицы клиентов
 INSERT INTO Clients (ClientID, FirstName, LastName, Email) VALUES
 (1, 'Иван', 'Иванов', 'ivan@example.com'),
@@ -98,7 +126,6 @@ INSERT INTO Clients (ClientID, FirstName, LastName, Email) VALUES
 (3, 'Иван', 'Сидоров', 'ivan3@example.com'),
 (4, 'Мария', 'Александрова', 'maria@example.com'),
 (5, 'Мария', 'Смирнова', 'maria2@example.com');
-
 -- Заполнение таблицы бронирований
 INSERT INTO Bookings (BookingID, ClientID, TourID, BookingDate, Status) VALUES
 (1, 1, 1, '2024-05-20', 'Confirmed'),
@@ -107,3 +134,6 @@ INSERT INTO Bookings (BookingID, ClientID, TourID, BookingDate, Status) VALUES
 (4, 4, 4, '2024-05-23', 'Confirmed'),
 (5, 5, 5, '2024-05-24', 'Pending');
 
+#3
+#Переходим к основовной задаче
+#Спроектировать веб-приложение с использованием Delphi 10.2, IIS и MS SQL Server.
