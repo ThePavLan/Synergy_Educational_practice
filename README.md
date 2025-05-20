@@ -54,6 +54,99 @@ pip install flask flask-sqlalchemy flask-cors psycopg2-binary
 
 Вариант 2: Через терминал
  - Сохраните код в файл app.py.
+```
+from flask import Flask, request, jsonify
+from flask_sqlalchemy import SQLAlchemy
+from flask_cors import CORS
+import threading
+import time  # Добавленный импорт time
+
+# Создайте Flask-приложение
+app = Flask(__name__)
+CORS(app)
+
+# Настройка PostgreSQL
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://postgres:postgres@localhost/tourism_db'
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+# Инициализация SQLAlchemy
+db = SQLAlchemy(app)
+
+# Модель для таблицы Tours
+class Tour(db.Model):
+    __tablename__ = 'tours' #имя таблицы
+    TourID = db.Column(db.Integer, primary_key=True, name='tourid')  # Сопоставление с tourid
+    TourName = db.Column(db.String(255), name='tourname')            # Сопоставление с tourname
+    CityID = db.Column(db.Integer, db.ForeignKey('cities.cityid'), name='cityid')  # cities.cityid
+    TypeID = db.Column(db.Integer, db.ForeignKey('tourtypes.typeid'), name='typeid')  # tourtypes.typeid
+    Price = db.Column(db.Numeric, name='price')
+    DurationDays = db.Column(db.Integer, name='durationdays')
+
+class City(db.Model):
+    __tablename__ = 'cities'
+    CityID = db.Column(db.Integer, primary_key=True, name='cityid')
+    CityName = db.Column(db.String(100), name='cityname')
+    CountryID = db.Column(db.Integer, db.ForeignKey('countries.countryid'), name='countryid')
+
+class TourType(db.Model):
+    __tablename__ = 'tourtypes'
+    TypeID = db.Column(db.Integer, primary_key=True, name='typeid')
+    TypeName = db.Column(db.String(100), name='typename')
+
+# Создание таблиц в контексте приложения
+with app.app_context():
+    db.create_all()
+
+#проверка перед запуском сервера
+with app.app_context():
+    try:
+        db.session.query(Tour).first()  # Проверяем подключение
+        print("Таблица tours доступна")
+    except Exception as e:
+        print("Ошибка подключения к БД:", str(e))
+
+#получаю Таблица tours доступна
+
+# Маршрут для получения данных
+@app.route('/tours', methods=['GET'])
+def get_tours():
+    with app.app_context():  # Активация контекста
+        try:
+            tours = Tour.query.all()
+            return jsonify([{'id': t.TourID, 'name': t.TourName, 'price': float(t.Price)} for t in tours])
+        except Exception as e:
+            return jsonify({"error": str(e)}), 500
+
+# Функция запуска сервера в отдельном потоке
+def run_flask():
+    app.run(debug=True, port=5000, use_reloader=False) # Отключен перезагрузчик
+ 
+# Запуск сервера в отдельном потоке
+thread = threading.Thread(target=run_flask)
+thread.daemon = True  # Поток завершится при закрытии Jupyter
+thread.start()
+
+# Ждём, пока сервер запустится 2 секунды
+time.sleep(2)
+
+#получаю следующее
+# * Serving Flask app '__main__'
+# * Debug mode: on
+#WARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.
+# * Running on http://127.0.0.1:5000
+#Press CTRL+C to quit
+
+with app.app_context():
+    tours = Tour.query.all()
+    print(tours)  # Должно вывести пустой список, если таблица пуста, в моем случае выходит [<Tour 1>, <Tour 2>, <Tour 3>, <Tour 4>, <Tour 5>]
+
+import requests
+
+# Делаем запрос к API
+response = requests.get('http://localhost:5000/tours')
+print(response.json())
+```
+  
  - Запустите сервер:
 ```
 python app.py
