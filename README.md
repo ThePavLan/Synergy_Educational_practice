@@ -155,6 +155,8 @@ python app.py
 ```
 http://localhost:5000/tours
 ```
+![по адресу localhost 5000](https://github.com/user-attachments/assets/64ce0c57-5825-471f-8dae-ef231fec92f6)
+
 
 Проверьте работу API
 Получение списка туров:
