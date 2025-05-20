@@ -40,5 +40,36 @@ pip install flask flask-sqlalchemy flask-cors psycopg2-binary
 2. Настройте PostgreSQL
 Убедитесь, что PostgreSQL запущен.
 Создайте базу данных tourism_db.
-Выполните SQL-скрипты из файла case.sql из [Кейс-Задачи №3](https://github.com/ThePavLan/Synergy_Educational_practice/blob/main/Кейс-задача%20№%203) для создания таблиц и заполнения данных.
+Выполните SQL-скрипты из файла case3.sql из [Кейс-Задачи №3](https://github.com/ThePavLan/Synergy_Educational_practice/blob/main/Кейс-задача%20№%203) для создания таблиц и заполнения данных.
 
+3. Запустите Flask-сервер
+Вариант 1: Через Jupyter Notebook
+ - Вставьте код из app.py в ячейку Jupyter.
+ - Выполните ячейку.
+ - API будет доступен по адресу: http://localhost:5000/tours
+
+Вариант 2: Через терминал
+ - Сохраните код в файл app.py.
+ - Запустите сервер:
+```
+python app.py
+```
+ - Откройте браузер и перейдите по ссылке:
+```
+http://localhost:5000/tours
+```
+
+Проверьте работу API
+Получение списка туров:
+```
+curl http://localhost:5000/tours
+```
+
+Пример ответа API
+```
+[
+  {"id": 1, "name": "Обзорная экскурсия по Москве", "price": 15000.0},
+  {"id": 2, "name": "Деловой тур в Берлин", "price": 16000.0},
+  {"id": 3, "name": "Тематический тур в Париж", "price": 17000.0}
+]
+```
