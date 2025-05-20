@@ -35,6 +35,7 @@ Countries, Cities, Tours, Bookings, Clients, TourTypes.
 ### 1. Установите зависимости  
 ```bash
 pip install flask flask-sqlalchemy flask-cors psycopg2-binary
+```
 
 2. Настройте PostgreSQL
 Убедитесь, что PostgreSQL запущен.
